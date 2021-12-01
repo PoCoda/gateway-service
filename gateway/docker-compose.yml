@@ -1,0 +1,14 @@
+version: '2'
+networks:
+  default:
+    external:
+      name: external-example
+
+services:
+  gateway-service:
+    image: 'gateway-service:latest'
+    build:
+      context: .
+    container_name: gateway-service
+    ports:
+      - 8080:8080
