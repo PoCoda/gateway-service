@@ -9,12 +9,12 @@ import com.pocoda.gateway.model.request.UserLoginRequest;
 import com.pocoda.gateway.model.request.UserRegistrationRequest;
 import com.pocoda.gateway.model.response.UserAuthorizationResponse;
 import com.pocoda.gateway.service.UserService;
+import com.pocoda.gateway.service.web.UserWebService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 import static com.pocoda.gateway.helper.AuthorizationUtils.JWT_SECRET;
@@ -25,20 +25,18 @@ import static java.time.temporal.ChronoUnit.HOURS;
 
 @Service
 public class UserServiceImpl implements UserService {
-    private List<User> users;
-
-    public UserServiceImpl() {
-        users = Collections.singletonList(new User(1l, "Adam", "Adminowicz", "admin", encodePassword("admin")));
-    }
+    @Autowired
+    private UserWebService userWebService;
 
     @Override
-    public Optional<User> findById(long id) {
-        return users.stream().filter(item -> item.getId().equals(id)).findFirst();
+    public Optional<User> findById(Long id) {
+        User user = userWebService.getById(id);
+        return Optional.ofNullable(user);
     }
 
     @Override
     public UserAuthorizationResponse login(UserLoginRequest request) {
-        User user = findUserUsername(request.getUsername());
+        User user = findUserByUsername(request.getUsername());
         validateLogin(user, request.getPassword());
         String token = generateJwt(user);
         return UserAuthorizationResponse.builder()
@@ -63,15 +61,23 @@ public class UserServiceImpl implements UserService {
 
     private User saveUser(UserRegistrationRequest request) {
         String encodedPassword = encodePassword(request.getPassword());
-        User user = new User((long) users.size(), request.getFirstName(), request.getLastName(), request.getUsername(), encodedPassword);
-        users.add(user);
+        var user = userWebService.create(User.builder()
+                .username(request.getUsername())
+                .firstName(request.getFirstName())
+                .lastName(request.getLastName())
+                .password(encodedPassword)
+                .build());
         return user;
     }
 
 
-    private User findUserUsername(String username) {
-        return users.stream().filter(item -> item.getUsername().equals(username)).findFirst()
-                .orElseThrow(() -> new NotFoundException("User doesn't exist"));
+    private User findUserByUsername(String username) {
+        User user = userWebService.getByUsername(username);
+        if(user==null){
+            throw new NotFoundException("User doesn't exist");
+        }
+
+        return user;
     }
 
     private void validateLogin(User userEntity, String password) {

@@ -8,7 +8,7 @@ import com.pocoda.gateway.model.response.UserAuthorizationResponse;
 import java.util.Optional;
 
 public interface UserService {
-    Optional<User> findById(long id);
+    Optional<User> findById(Long id);
 
     UserAuthorizationResponse login(UserLoginRequest request);
 
