@@ -9,6 +9,7 @@ import com.pocoda.gateway.model.exception.NotFoundException;
 import com.pocoda.gateway.model.request.UserLoginRequest;
 import com.pocoda.gateway.model.request.UserRegistrationRequest;
 import com.pocoda.gateway.model.response.UserAuthorizationResponse;
+import com.pocoda.gateway.model.response.UserResponse;
 import com.pocoda.gateway.service.UserService;
 import com.pocoda.gateway.service.web.UserWebService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +59,12 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
+    @Override
+    public UserResponse getDetails(Long userId) {
+        var user = findUserById(userId);
+        return userMapper.userToUserResponse(user);
+    }
+
     private User saveUser(UserRegistrationRequest request) {
         String encodedPassword = encodePassword(request.getPassword());
         var user = userWebService.create(User.builder()
@@ -73,6 +80,15 @@ public class UserServiceImpl implements UserService {
 
     private User findUserByUsername(String username) {
         User user = userWebService.getByUsername(username);
+        if(user==null){
+            throw new NotFoundException("User doesn't exist");
+        }
+
+        return user;
+    }
+
+    private User findUserById(Long userId) {
+        User user = userWebService.getById(userId);
         if(user==null){
             throw new NotFoundException("User doesn't exist");
         }
