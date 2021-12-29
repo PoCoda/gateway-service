@@ -23,4 +23,7 @@ public class UserRegistrationRequest {
 
     @NotBlank
     private String password;
+
+    @NotBlank
+    private String city;
 }

@@ -2,6 +2,7 @@ package com.pocoda.gateway.service.implementation;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.pocoda.gateway.mapper.UserMapper;
 import com.pocoda.gateway.model.User;
 import com.pocoda.gateway.model.exception.AuthorizationException;
 import com.pocoda.gateway.model.exception.NotFoundException;
@@ -27,6 +28,8 @@ import static java.time.temporal.ChronoUnit.HOURS;
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserWebService userWebService;
+    @Autowired
+    private UserMapper userMapper;
 
     @Override
     public Optional<User> findById(Long id) {
@@ -41,9 +44,7 @@ public class UserServiceImpl implements UserService {
         String token = generateJwt(user);
         return UserAuthorizationResponse.builder()
                 .token(token)
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .username(user.getUsername())
+                .user(userMapper.userToUserResponse(user))
                 .build();
     }
 
@@ -53,9 +54,7 @@ public class UserServiceImpl implements UserService {
         String token = generateJwt(user);
         return UserAuthorizationResponse.builder()
                 .token(token)
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .username(user.getUsername())
+                .user(userMapper.userToUserResponse(user))
                 .build();
     }
 
@@ -66,6 +65,7 @@ public class UserServiceImpl implements UserService {
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .password(encodedPassword)
+                .city(request.getCity())
                 .build());
         return user;
     }

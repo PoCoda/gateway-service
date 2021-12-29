@@ -7,7 +7,5 @@ import lombok.Value;
 @Builder
 public class UserAuthorizationResponse {
     public String token;
-    public String firstName;
-    public String lastName;
-    public String username;
+    public UserResponse user;
 }
