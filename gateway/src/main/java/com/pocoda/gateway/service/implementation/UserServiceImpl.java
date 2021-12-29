@@ -3,6 +3,7 @@ package com.pocoda.gateway.service.implementation;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.pocoda.gateway.mapper.UserMapper;
+import com.pocoda.gateway.model.UpdateUserCityWebRequest;
 import com.pocoda.gateway.model.User;
 import com.pocoda.gateway.model.exception.AuthorizationException;
 import com.pocoda.gateway.model.exception.NotFoundException;
@@ -62,6 +63,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse getDetails(Long userId) {
         var user = findUserById(userId);
+        return userMapper.userToUserResponse(user);
+    }
+
+    @Override
+    public UserResponse updateCity(Long userId, String city) {
+        var user = userWebService.updateCity(UpdateUserCityWebRequest.builder()
+                .userId(userId)
+                .city(city)
+                .build());
         return userMapper.userToUserResponse(user);
     }
 

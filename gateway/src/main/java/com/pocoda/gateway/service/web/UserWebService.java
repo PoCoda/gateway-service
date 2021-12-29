@@ -1,5 +1,6 @@
 package com.pocoda.gateway.service.web;
 
+import com.pocoda.gateway.model.UpdateUserCityWebRequest;
 import com.pocoda.gateway.model.User;
 
 public interface UserWebService {
@@ -8,4 +9,6 @@ public interface UserWebService {
     User getByUsername(String username);
 
     User create(User user);
+
+    User updateCity(UpdateUserCityWebRequest request);
 }

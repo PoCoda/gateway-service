@@ -39,4 +39,12 @@ public class UserController {
         var result = userService.getDetails(userId);
         return ResponseEntity.ok(result);
     }
+
+    @UserAuthority
+    @PostMapping("/city/{city}")
+    ResponseEntity<UserResponse> updateCity(Principal principal, @PathVariable("city") String city) {
+        Long userId = Long.parseLong(principal.getName());
+        var result = userService.updateCity(userId, city);
+        return ResponseEntity.ok(result);
+    }
 }

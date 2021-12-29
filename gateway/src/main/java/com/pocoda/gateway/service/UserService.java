@@ -16,4 +16,6 @@ public interface UserService {
     UserAuthorizationResponse register(UserRegistrationRequest request);
 
     UserResponse getDetails(Long userId);
+
+    UserResponse updateCity(Long userId, String city);
 }
