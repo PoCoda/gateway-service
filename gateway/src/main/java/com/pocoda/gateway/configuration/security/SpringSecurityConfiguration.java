@@ -28,7 +28,8 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
     };
 
     private static final String[] GUEST_URLS = {
-            "/test"
+            "/test",
+            "/info"
     };
 
     private static final String USER_REGISTRATION_URL = "/user/registration";
