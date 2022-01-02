@@ -7,4 +7,5 @@ import lombok.*;
 @NoArgsConstructor
 public class InfoResponse {
     private WeatherResponse weather;
+    private PollutionResponse pollution;
 }
