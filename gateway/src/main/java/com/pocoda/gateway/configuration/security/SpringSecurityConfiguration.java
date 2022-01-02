@@ -24,7 +24,8 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
             "/swagger-ui/",
             "/swagger-ui/*",
             "/v2/api-docs",
-            "/webjars/**"
+            "/webjars/**",
+            "/actuator/**"
     };
 
     private static final String[] GUEST_URLS = {
